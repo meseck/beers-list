@@ -7,7 +7,7 @@ it('should return data from the BreweryDB database', () => {
   });
 });
 
-it('should a beer name from the BreweryDB database', () => {
+it('should response with a beer name from the BreweryDB database', () => {
   fetchDataFromServer().then(beer => {
     expect(beer.name).toBe('Murican Pilsner');
   });
