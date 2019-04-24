@@ -115,7 +115,8 @@ module.exports = {
   // roots: [
   //   "<rootDir>"
   // ],
-  roots: ['./test'],
+
+  roots: ['./src/test'],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -130,7 +131,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: 'node',
+  // testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
