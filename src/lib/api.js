@@ -1,4 +1,3 @@
-export const fetchDataFromServer = () => {
-  return fetch('/beers')
-    .then(res => res.json());
+export const fetchDataFromServer = page => {
+  return fetch('/beers/' + page).then(res => res.json());
 };
