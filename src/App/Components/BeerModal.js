@@ -18,6 +18,7 @@ class BeerModal extends React.Component {
             {this.props.beer.labels ? (
               <img
                 src={this.props.beer.labels.medium}
+                alt={this.props.beer.nameDisplay + ' label'}
                 style={{
                   display: 'block',
                   margin: 'auto',
@@ -26,7 +27,9 @@ class BeerModal extends React.Component {
               />
             ) : null}
             <div className="row">
-              <div className={this.props.beer.description ? 'col-4' : 'col'}>
+              <div
+                className={this.props.beer.description ? 'col-4' : 'col'}
+              >
                 {this.props.beer.abv ? (
                   <p>
                     <b>Alcohol: </b> {this.props.beer.abv}%
