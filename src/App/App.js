@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { fetchDataFromServer } from '../lib/api';
 import './App.css';
+import BeerModal from './Components/BeerModal';
 
 class App extends Component {
-  state = { currentPage: 1, numberOfPages: 0, beers: [] };
+  state = {
+    currentPage: 1,
+    numberOfPages: 0,
+    beers: [],
+    selectedBeer: null,
+  };
 
   componentDidMount() {
     fetchDataFromServer(this.state.currentPage).then(response =>
@@ -12,45 +18,57 @@ class App extends Component {
         numberOfPages: response.numberOfPages,
         beers: response.data,
       })
-    );
+    ).catch((e) => {
+      console.log(e);
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    this.handleChangePage = direction => {
-      if (prevState.currentPage === 1 && direction === -1) {
-        return;
-      } else if (prevState.currentPage === this.state.numberOfPages && direction === 1) {
-        return;
-      } else {
-        this.setState({currentPage: prevState.currentPage += direction});
-      }
-    };
+  handleChangePage = direction => {
+    const newPage = this.state.currentPage + direction;
 
-    if (this.state.currentPage !== prevState.currentPage) {
-      fetchDataFromServer(this.state.currentPage).then(response =>
-        this.setState({
-          beers: response.data,
-        })
-      );
+    if (newPage <= 0 || newPage > this.state.numberOfPages){
+      return;
     }
-  }
+
+    this.setState({ currentPage: newPage });
+    fetchDataFromServer(newPage).then(response =>
+      this.setState({
+        beers: response.data,
+      })
+    );
+  };
+
+  handleToggleModal = beer => {
+    this.setState({
+      selectedBeer: beer,
+    });
+  };
 
   render() {
     return (
       <div className="App">
+        <BeerModal
+          toggleModal={() => this.handleToggleModal(null)}
+          beer={this.state.selectedBeer}
+        />
         <table className="table">
           <thead>
             <tr>
               <th>Name</th>
-              <th>ABV</th>
-              <th>IBU</th>
+              <th>Alcohol</th>
+              <th>Bitterness</th>
             </tr>
           </thead>
           <tbody>
             {this.state.beers.map(beer => (
-              <tr key={beer.id}>
+              <tr
+                key={beer.id}
+                onClick={() => {
+                  this.handleToggleModal(beer);
+                }}
+              >
                 <td>{beer.nameDisplay}</td>
-                <td>{beer.abv}</td>
+                <td>{beer.abv}%</td>
                 <td>{beer.ibu}</td>
               </tr>
             ))}
@@ -59,8 +77,24 @@ class App extends Component {
         <p>
           {this.state.currentPage} of {this.state.numberOfPages} pages
         </p>
-        <button onClick={() => this.handleChangePage(-1)}>Previous Page</button>
-        <button onClick={() => this.handleChangePage(1)}>Next Page</button>
+        <ul className="pagination">
+          <li className="page-item">
+            <button
+              className="page-link"
+              onClick={() => this.handleChangePage(-1)}
+            >
+              Previous Page
+            </button>
+          </li>
+          <li className="page-item">
+            <button
+              className="page-link"
+              onClick={() => this.handleChangePage(1)}
+            >
+              Next Page
+            </button>
+          </li>
+        </ul>
       </div>
     );
   }

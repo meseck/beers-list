@@ -4,3 +4,11 @@
 .table {
   text-align: left;
 }
+
+tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  color:#1a82fc;
+}
