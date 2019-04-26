@@ -12,30 +12,31 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetchDataFromServer(this.state.currentPage).then(response =>
-      this.setState({
-        currentPage: response.currentPage,
-        numberOfPages: response.numberOfPages,
-        beers: response.data,
-      })
-    ).catch((e) => {
-      console.log(e);
-    });
+    this.fetchBeers(this.state.currentPage);
+  }
+
+  fetchBeers(page) {
+    fetchDataFromServer(page)
+      .then(response =>
+        this.setState({
+          numberOfPages: response.numberOfPages,
+          beers: response.data,
+        })
+      )
+      .catch(e => {
+        // Ignore
+      });
   }
 
   handleChangePage = direction => {
     const newPage = this.state.currentPage + direction;
 
-    if (newPage <= 0 || newPage > this.state.numberOfPages){
+    if (newPage <= 0 || newPage > this.state.numberOfPages) {
       return;
     }
 
     this.setState({ currentPage: newPage });
-    fetchDataFromServer(newPage).then(response =>
-      this.setState({
-        beers: response.data,
-      })
-    );
+    this.fetchBeers(newPage);
   };
 
   handleToggleModal = beer => {
@@ -68,7 +69,7 @@ class App extends Component {
                 }}
               >
                 <td>{beer.nameDisplay}</td>
-                <td>{beer.abv}%</td>
+                <td>{beer.abv ? beer.abv + '%' : null}</td>
                 <td>{beer.ibu}</td>
               </tr>
             ))}

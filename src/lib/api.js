@@ -1,5 +1,14 @@
+let controller = new AbortController();
+
 export const fetchDataFromServer = page => {
-  return fetch('/beers/' + page).then(res =>
-    res.json()
-  );
+  controller.abort();
+  controller = new AbortController();
+
+  const options = {
+    signal: controller.signal,
+  };
+
+  const url = `/beers/${page}`;
+
+  return fetch(url, options).then(res => res.json());
 };
